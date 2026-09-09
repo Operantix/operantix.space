@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPERANTIX // Autonomous AI & Elite Software Studio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace'],
+          },
+          colors: {
+            brandDark: '#07080B',
+            brandCard: '#12131A',
+            emeraldGlow: '#10B981',
+            indigoGlow: '#6366F1',
+          },
+          animation: {
+            'border-beam': 'border-beam 4s linear infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+          },
+          keyframes: {
+            'border-beam': {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' },
+            },
+            'float': {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #07080B;
+      color: #F3F4F6;
+      cursor: default;
+    }
+    
+    /* Conic Gradient Neon Border Sweep */
+    .glow-border-box {
+      position: relative;
+      border-radius: 1rem;
+      background: #12131A;
+      overflow: hidden;
+    }
+    .glow-border-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent 0 340deg, #10B981 360deg);
+      animation: border-beam 6s linear infinite;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .glow-border-box:hover::before {
+      opacity: 1;
+    }
+    .glow-border-inner {
+      position: relative;
+      background: #12131A;
+      border-radius: calc(1rem - 1px);
+      z-index: 1;
+      height: 100%;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07080B;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2937;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10B981;
+    }
+
+    /* Cyber Matrix Infinite Grid Background */
+    .cyber-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      animation: cyber-grid-travel 18s linear infinite;
+    }
+    @keyframes cyber-grid-travel {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 40px; }
+    }
+
+    /* Radar / Hologram Sweeping Scanline */
+    .scanline-beam {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.15) 30%, rgba(99, 102, 241, 0.8) 50%, rgba(16, 185, 129, 0.15) 70%, transparent 100%);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.7), 0 0 35px rgba(16, 185, 129, 0.5);
+      pointer-events: none;
+      z-index: 35;
+      opacity: 0.65;
+      animation: scanline-sweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes scanline-sweep {
+      0% { transform: translateY(-10px); opacity: 0; }
+      10% { opacity: 0.75; }
+      90% { opacity: 0.75; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    /* Animated Shimmering Gradient Text */
+    .shimmer-text {
+      background: linear-gradient(90deg, #FFFFFF 0%, #10B981 25%, #6366F1 50%, #10B981 75%, #FFFFFF 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shimmer-flow 5s linear infinite;
+    }
+    @keyframes shimmer-flow {
+      to { background-position: 200% center; }
+    }
+
+    /* Glow pulse animation */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .pulse-badge {
+      animation: pulse-ring 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    }
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body class="overflow-x-hidden selection:bg-emerald-500 selection:text-black">
+
+  <!-- Dynamic Cursor -->
+  <div id="cursor-dot" class="fixed w-3 h-3 bg-emerald-400 rounded-full pointer-events-none z-50 transition-transform duration-75 mix-blend-screen hidden md:block"></div>
+  <div id="cursor-ring" class="fixed w-9 h-9 border border-indigo-400/60 rounded-full pointer-events-none z-50 transition-all duration-200 hidden md:block"></div>
+
+  <!-- Background Ambient Glows -->
+  <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 blur-[140px] rounded-full pointer-events-none"></div>
+  <div class="fixed bottom-1/3 right-1/4 w-[30rem] h-[30rem] bg-indigo-600/10 blur-[160px] rounded-full pointer-events-none"></div>
+
+  <!-- Floating Island Header -->
+  <header class="fixed top-6 inset-x-0 z-40 flex justify-center px-4">
+    <nav class="backdrop-blur-xl bg-zinc-950/80 border border-white/10 rounded-full px-6 py-3 flex items-center justify-between w-full max-w-5xl shadow-2xl shadow-black/80">
+      <a href="#" class="flex items-center space-x-2.5">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        </span>
+        <span class="font-mono font-bold tracking-widest text-white text-sm">OPERANTIX</span>
+      </a>
+
+      <div class="hidden md:flex items-center space-x-8 font-mono text-xs text-zinc-400">
+        <a href="#capabilities" class="hover:text-emerald-400 transition-colors">CAPABILITIES</a>
+        <a href="#demo" class="hover:text-emerald-400 transition-colors">LIVE DEMOS</a>
+        <a href="#advantage" class="hover:text-emerald-400 transition-colors">SOLO ADVANTAGE</a>
+        <a href="#contact" class="hover:text-emerald-400 transition-colors">CONTACT</a>
+      </div>
+
+      <a href="#contact" class="px-5 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-indigo-600 hover:from-emerald-400 hover:to-indigo-500 text-white font-mono text-xs font-semibold shadow-lg shadow-emerald-500/20 transition-all transform hover:scale-105 active:scale-95">
+        Deploy a Project
+      </a>
+    </nav>
+  </header>
+
+  <!-- Hero Section with Three.js Canvas -->
+  <section class="relative min-h-screen pt-36 pb-20 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div class="space-y-8 z-10">
+      <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 font-mono text-xs text-emerald-400">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 animate-spin" style="animation-duration: 8s;"></i>
+        <span>ELITE SOLO SOFTWARE STUDIO & AI LAB</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
+        Architecting <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400">Autonomous AI Agents</span>, Custom Models & Full-Stack Systems.
+      </h1>
+
+      <p class="text-lg text-zinc-400 leading-relaxed font-sans max-w-xl">
+        Operantix is a premier solo engineering studio building fluid Android & iOS apps, reactive Node.js backends, specialized Telegram bots, custom-trained LLM models, and low-latency AI calling agents.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 font-mono text-xs">
+        <a href="mailto:operantix@gmail.com" class="px-7 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition-all flex items-center justify-center space-x-2 shadow-xl shadow-emerald-500/25 transform hover:-translate-y-0.5">
+          <span>Start a Build</span>
+          <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+        </a>
+        <a href="#capabilities" class="px-7 py-4 rounded-xl bg-zinc-900/90 border border-white/10 hover:border-indigo-500 text-zinc-300 hover:text-white transition-all flex items-center justify-center space-x-2 backdrop-blur-md">
+          <span>Explore Capabilities</span>
+        </a>
+      </div>
+
+      <div class="pt-6 border-t border-white/10 grid grid-cols-3 gap-6 font-mono">
+        <div>
+          <div class="text-2xl font-bold text-white">&lt;24ms</div>
+          <div class="text-xs text-zinc-500">Voice Loop Latency</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-emerald-400">100%</div>
+          <div class="text-xs text-zinc-500">Code Ownership</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-indigo-400">1:1</div>
+          <div class="text-xs text-zinc-500">Principal Engineer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Three.js Viewport -->
+    <div class="relative w-full h-[450px] lg:h-[550px] flex items-center justify-center">
+      <div id="three-container" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+      <div class="absolute bottom-4 left-4 font-mono text-[10px] text-zinc-500 bg-zinc-950/80 px-3 py-1.5 rounded-full border border-white/10">
+        [3D INTERACTIVE] ROTATE & PARALLAX VIA CURSOR
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Capabilities Bento Grid -->
+  <section id="capabilities" class="py-24 px-6 max-w-7xl mx-auto space-y-16">
+    <div class="text-center space-y-4 max-w-2xl mx-auto">
+      <h2 class="font-mono text-xs tracking-widest text-emerald-400 uppercase">ENGINEERING OFFERINGS</h2>
+      <p class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+        Precision Engineering Without Bureaucracy
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Card 1 -->
+      <div class="glow-border-box group" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+        <div class="glow-border-inner p-8 flex flex-col justify-between space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="p-3 rounded-xl bg-zinc-900 border border-white/10 text-emerald-400 group-hover:text-indigo-400 transition-colors">
+              <i data-lucide="smartphone" class="w-6 h-6"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 rounded-full">MOBILE</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors">Native & Cross-Platform Mobile</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">
+              High-performance Android & iOS applications crafted with fluid micro-gestures, offline-first sync, and native device hardware integrations.
+            </p>
+          </div>
+          <div class="text-xs font-mono text-zinc-500 group-hover:text-emerald-400 transition-colors flex items-center">
+            <span>FLUTTER • REACT NATIVE • SWIFT • KOTLIN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="glow-border-box group" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+        <div class="glow-border-inner p-8 flex flex-col justify-between space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="p-3 rounded-xl bg-zinc-900 border border-white/10 text-emerald-400 group-hover:text-indigo-400 transition-colors">
+              <i data-lucide="globe" class="w-6 h-6"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-mono text-indigo-400 bg-indigo-950/40 border border-indigo-500/30 rounded-full">BACKEND</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">Web Platforms & Node.js Backends</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">
+              Scalable full-stack web platforms, real-time WebSocket pipelines, and high-throughput Node.js microservices engineered for zero downtime.
+            </p>
+          </div>
+          <div class="text-xs font-mono text-zinc-500 group-hover:text-indigo-400 transition-colors flex items-center">
+            <span>NEXT.JS • FASTIFY • POSTGRES • REDIS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="glow-border-box group" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+        <div class="glow-border-inner p-8 flex flex-col justify-between space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="p-3 rounded-xl bg-zinc-900 border border-white/10 text-emerald-400 group-hover:text-indigo-400 transition-colors">
+              <i data-lucide="bot" class="w-6 h-6"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 rounded-full">BOTS</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors">Telegram Bots & TMA Automations</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">
+              Scalable message handlers, media processing pipelines, and custom Telegram Mini Apps (TMA) integrated directly with payment APIs.
+            </p>
+          </div>
+          <div class="text-xs font-mono text-zinc-500 group-hover:text-emerald-400 transition-colors flex items-center">
+            <span>GRAMMY • TELEGRAF • WEB3 • PAYMENTS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="glow-border-box group" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+        <div class="glow-border-inner p-8 flex flex-col justify-between space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="p-3 rounded-xl bg-zinc-900 border border-white/10 text-emerald-400 group-hover:text-indigo-400 transition-colors">
+              <i data-lucide="cpu" class="w-6 h-6"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-mono text-indigo-400 bg-indigo-950/40 border border-indigo-500/30 rounded-full">AI AGENTS</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">Autonomous AI Agents</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">
+              Multi-step reasoning loops, autonomous tool-calling pipelines, dynamic agent swarms, and self-healing execution architectures.
+            </p>
+          </div>
+          <div class="text-xs font-mono text-zinc-500 group-hover:text-indigo-400 transition-colors flex items-center">
+            <span>LANGGRAPH • AUTO-TOOLS • MCP • VECTOR DB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="glow-border-box group" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+        <div class="glow-border-inner p-8 flex flex-col justify-between space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="p-3 rounded-xl bg-zinc-900 border border-white/10 text-emerald-400 group-hover:text-indigo-400 transition-colors">
+              <i data-lucide="database" class="w-6 h-6"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 rounded-full">TRAINING</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors">Custom Model Training & Fine-Tuning</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">
+              Domain-specific LLM fine-tuning, custom synthetic dataset curations, and high-precision RAG vector engines with customized tokenizers.
+            </p>
+          </div>
+          <div class="text-xs font-mono text-zinc-500 group-hover:text-emerald-400 transition-colors flex items-center">
+            <span>UNSLOTH • LORA • QLORA • PYTORCH</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="glow-border-box group" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+        <div class="glow-border-inner p-8 flex flex-col justify-between space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="p-3 rounded-xl bg-zinc-900 border border-white/10 text-emerald-400 group-hover:text-indigo-400 transition-colors">
+              <i data-lucide="phone-call" class="w-6 h-6"></i>
+            </div>
+            <span class="px-3 py-1 text-xs font-mono text-indigo-400 bg-indigo-950/40 border border-indigo-500/30 rounded-full">TELEPHONY</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">Real-Time AI Calling & Voice</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">
+              Ultra-low latency conversational telephony agents featuring sub-300ms speech-to-speech loops, dynamic interruption, and ultra-lifelike audio.
+            </p>
+          </div>
+          <div class="text-xs font-mono text-zinc-500 group-hover:text-indigo-400 transition-colors flex items-center">
+            <span>LIVEKIT • WEBRTC • TWILIO • ELEVENLABS</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Live Demos & Simulations -->
+  <section id="demo" class="py-24 px-6 max-w-7xl mx-auto space-y-16">
+    <div class="text-center space-y-4 max-w-2xl mx-auto">
+      <h2 class="font-mono text-xs tracking-widest text-indigo-400 uppercase">INTERACTIVE DEMOS</h2>
+      <p class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+        Engine Telemetry & Voice Simulation
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Interactive Terminal Widget -->
+      <div class="rounded-2xl bg-[#0B0C10] border border-white/10 p-6 font-mono text-xs shadow-2xl space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
+            <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
+            <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+            <span class="text-zinc-500 ml-2">sys@operantix-node-01:~</span>
+          </div>
+          <div class="flex items-center space-x-2 text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>LIVE DISPATCHER</span>
+          </div>
+        </div>
+
+        <div id="terminal-screen" class="space-y-2 h-48 overflow-y-auto font-mono text-zinc-300">
+          <div class="text-zinc-500">// Ready. Select an operation below or watch streaming telemetry:</div>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex flex-wrap gap-2">
+          <button onclick="runCommand('deploy-agent')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-emerald-400 text-zinc-300 hover:text-white transition-all text-[11px]">
+            &gt; deploy-agent
+          </button>
+          <button onclick="runCommand('test-telephony')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-indigo-400 text-zinc-300 hover:text-white transition-all text-[11px]">
+            &gt; ping-voice-node
+          </button>
+          <button onclick="runCommand('view-stack')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-white text-zinc-300 hover:text-white transition-all text-[11px]">
+            &gt; cat studio_spec.json
+          </button>
+        </div>
+      </div>
+
+      <!-- Interactive Calling Voice Simulator -->
+      <div class="rounded-2xl bg-[#0B0C10] border border-white/10 p-6 flex flex-col justify-between space-y-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <i id="phone-icon" data-lucide="phone-call" class="w-5 h-5 text-indigo-400"></i>
+            <span class="font-mono text-xs text-white">AI TELEPHONY CONVERSATIONAL AGENT</span>
+          </div>
+          <button id="voice-toggle-btn" onclick="toggleVoiceSim()" class="px-4 py-1.5 rounded-full font-mono text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30 transition-all">
+            INITIATE VOICE TEST
+          </button>
+        </div>
+
+        <div class="h-36 bg-zinc-950/80 rounded-xl border border-white/10 relative overflow-hidden flex items-center justify-center">
+          <canvas id="voice-canvas" width="600" height="150" class="w-full h-full"></canvas>
+          <div id="voice-status" class="absolute bottom-2 right-3 font-mono text-[10px] text-zinc-500">
+            STATUS: STANDBY
+          </div>
+        </div>
+
+        <div class="font-mono text-xs text-zinc-400 flex items-center justify-between">
+          <span>PIPELINE: RTC -&gt; VAD -&gt; LLM -&gt; TTS</span>
+          <span class="text-emerald-400">0.24s LATENCY</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- The Solo Advantage -->
+  <section id="advantage" class="py-24 px-6 max-w-7xl mx-auto space-y-16">
+    <div class="text-center space-y-4 max-w-2xl mx-auto">
+      <h2 class="font-mono text-xs tracking-widest text-emerald-400 uppercase">DIRECT EXECUTION</h2>
+      <p class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+        The Solo Builder Advantage
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="p-8 rounded-2xl bg-brandCard border border-white/10 space-y-4">
+        <i data-lucide="zap" class="w-8 h-8 text-emerald-400"></i>
+        <h3 class="text-xl font-bold text-white">Zero Overhead</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">
+          No account managers, sprint ceremonies, or junior layers. You communicate 1:1 with the elite architect who writes every line of code.
+        </p>
+      </div>
+
+      <div class="p-8 rounded-2xl bg-brandCard border border-white/10 space-y-4">
+        <i data-lucide="code-2" class="w-8 h-8 text-indigo-400"></i>
+        <h3 class="text-xl font-bold text-white">Rapid Prototyping</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">
+          From specification to functional prototype in 48-72 hours. Production-grade architecture with zero tech debt built from day one.
+        </p>
+      </div>
+
+      <div class="p-8 rounded-2xl bg-brandCard border border-white/10 space-y-4">
+        <i data-lucide="shield-check" class="w-8 h-8 text-emerald-400"></i>
+        <h3 class="text-xl font-bold text-white">Full IP Ownership</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">
+          100% clean repositories, clean licenses, and complete containerized deployment workflows delivered straight to your cloud tenant.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-24 px-6 max-w-7xl mx-auto space-y-16">
+    <div class="text-center space-y-4 max-w-2xl mx-auto">
+      <h2 class="font-mono text-xs tracking-widest text-emerald-400 uppercase">GET IN TOUCH</h2>
+      <p class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+        Ready to Build Something Incredible?
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      
+      <!-- Direct Email Spotlight -->
+      <div class="p-8 rounded-2xl bg-gradient-to-br from-brandCard to-[#0C0D12] border border-white/10 space-y-8 shadow-2xl">
+        <div class="space-y-3">
+          <span class="font-mono text-xs text-emerald-400">DIRECT STUDIO CONTACT</span>
+          <h3 class="text-2xl font-bold text-white">Direct Line to Principal Engineer</h3>
+          <p class="text-sm text-zinc-400">
+            Send your project brief or request an architectural consultation. Every inquiry receives a technical response within 24 hours.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-zinc-950 border border-white/10 flex items-center justify-between font-mono text-sm">
+          <span id="email-address" class="text-emerald-400 select-all">operantix@gmail.com</span>
+          <button onclick="copyStudioEmail()" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-all flex items-center space-x-2 text-xs">
+            <i id="copy-icon" data-lucide="copy" class="w-4 h-4"></i>
+            <span id="copy-text">COPY</span>
+          </button>
+        </div>
+
+        <a href="mailto:operantix@gmail.com" class="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/20">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+          <span>OPEN IN DEFAULT EMAIL CLIENT</span>
+        </a>
+      </div>
+
+      <!-- Contact Form -->
+      <form onsubmit="handleContactSubmit(event)" class="p-8 rounded-2xl bg-brandCard border border-white/10 space-y-6 shadow-2xl">
+        <div class="space-y-2">
+          <label class="block font-mono text-xs text-zinc-400">YOUR NAME</label>
+          <input type="text" required placeholder="e.g. Liam Vance" class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 focus:border-emerald-400 text-white text-sm focus:outline-none transition-colors">
+        </div>
+
+        <div class="space-y-2">
+          <label class="block font-mono text-xs text-zinc-400">YOUR EMAIL</label>
+          <input type="email" required placeholder="liam@company.com" class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 focus:border-emerald-400 text-white text-sm focus:outline-none transition-colors">
+        </div>
+
+        <div class="space-y-2">
+          <label class="block font-mono text-xs text-zinc-400">SYSTEM CATEGORY</label>
+          <select class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 focus:border-emerald-400 text-white text-sm focus:outline-none transition-colors">
+            <option>Autonomous AI Agent Swarm</option>
+            <option>Real-Time AI Calling / Voice Bot</option>
+            <option>High-Performance Mobile App</option>
+            <option>Scalable Web / Node.js Microservice</option>
+            <option>Telegram Bot / TMA Integration</option>
+            <option>Custom LLM Fine-Tuning & RAG</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block font-mono text-xs text-zinc-400">PROJECT SPECIFICATIONS</label>
+          <textarea rows="4" required placeholder="Briefly specify key deliverables, current infrastructure, and estimated timeline..." class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 focus:border-emerald-400 text-white text-sm focus:outline-none transition-colors"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-mono text-xs font-bold transition-all shadow-lg shadow-emerald-500/20">
+          TRANSMIT PROJECT BRIEF
+        </button>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 max-w-7xl mx-auto border-t border-white/10 space-y-8">
+    <div class="h-0.5 w-full bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-40"></div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs text-zinc-500">
+      <div>
+        © 2026 OPERANTIX SOFTWARE LAB. ALL SYSTEMS NOMINAL.
+      </div>
+      <div class="flex items-center space-x-6">
+        <a href="mailto:operantix@gmail.com" class="hover:text-emerald-400 transition-colors">EMAIL</a>
+        <a href="#capabilities" class="hover:text-emerald-400 transition-colors">CAPABILITIES</a>
+        <a href="#demo" class="hover:text-emerald-400 transition-colors">LIVE DEMO</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Scripts: Three.js 3D Viewport & Audio Wave Generator -->
+  <script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    // --- MOUSE CURSOR TRACKER ---
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    window.addEventListener('mousemove', (e) => {
+      dot.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0)`;
+      ring.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0)`;
+    });
+
+    // --- 3D THREE.JS PARTICLES & WIREFRAME GEOMETRY ---
+    const container = document.getElementById('three-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.z = 7;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Glowing Torus Knot
+    const knotGeo = new THREE.TorusKnotGeometry(1.6, 0.45, 128, 32);
+    const knotMat = new THREE.MeshStandardMaterial({
+      color: 0x10B981,
+      wireframe: true,
+      emissive: 0x052e16,
+      roughness: 0.2,
+      metalness: 0.9,
+    });
+    const torusKnot = new THREE.Mesh(knotGeo, knotMat);
+    scene.add(torusKnot);
+
+    // Starfield Particles
+    const particlesCount = 300;
+    const posArray = new Float32Array(particlesCount * 3);
+    for(let i=0; i < particlesCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 15;
+    }
+    const particleGeo = new THREE.BufferGeometry();
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const particleMat = new THREE.PointsMaterial({
+      size: 0.03,
+      color: 0x6366F1,
+      transparent: true,
+      opacity: 0.7
+    });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+
+    // Lighting
+    const pointLight = new THREE.PointLight(0x10B981, 2, 50);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    const blueLight = new THREE.PointLight(0x6366F1, 3, 50);
+    blueLight.position.set(-5, -5, 5);
+    scene.add(blueLight);
+
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // Orbiting Quantum Satellites
+    const satellites = [];
+    const satGeo = new THREE.OctahedronGeometry(0.28, 0);
+    const satMaterials = [
+      new THREE.MeshStandardMaterial({ color: 0x10B981, wireframe: true, emissive: 0x10B981, emissiveIntensity: 0.8 }),
+      new THREE.MeshStandardMaterial({ color: 0x6366F1, wireframe: true, emissive: 0x6366F1, emissiveIntensity: 0.8 }),
+      new THREE.MeshStandardMaterial({ color: 0x38BDF8, wireframe: true, emissive: 0x38BDF8, emissiveIntensity: 0.8 })
+    ];
+
+    for (let i = 0; i < 3; i++) {
+      const satMesh = new THREE.Mesh(satGeo, satMaterials[i]);
+      satellites.push({
+        mesh: satMesh,
+        radius: 2.8 + i * 0.6,
+        speed: (0.7 + i * 0.35) * (i % 2 === 0 ? 1 : -1),
+        offset: (i * Math.PI * 2) / 3,
+        inclination: 0.4 + i * 0.5
+      });
+      scene.add(satMesh);
+    }
+
+    const clock = new THREE.Clock();
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+      const elapsedTime = clock.getElapsedTime();
+
+      // Core Breathing Pulsation
+      const pulseScale = 1.0 + Math.sin(elapsedTime * 2.2) * 0.05;
+      torusKnot.scale.set(pulseScale, pulseScale, pulseScale);
+
+      torusKnot.rotation.x = elapsedTime * 0.4 + mouseY * 0.6;
+      torusKnot.rotation.y = elapsedTime * 0.5 + mouseX * 0.6;
+
+      // Rotate Satellites in 3D Elliptical Orbits
+      satellites.forEach((sat, idx) => {
+        const theta = elapsedTime * sat.speed + sat.offset;
+        sat.mesh.position.x = Math.cos(theta) * sat.radius;
+        sat.mesh.position.y = Math.sin(theta * 1.5) * (sat.radius * 0.45);
+        sat.mesh.position.z = Math.sin(theta) * sat.radius * Math.cos(sat.inclination);
+        sat.mesh.rotation.x += 0.03;
+        sat.mesh.rotation.y += 0.04;
+      });
+
+      particles.rotation.y = elapsedTime * 0.08 + mouseX * 0.05;
+      particles.rotation.x = mouseY * 0.05;
+      renderer.render(scene, camera);
+    }
+    animateThree();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    // --- 3D BENTO TILT PHYSICS ---
+    function handleTilt(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateX = (-y / (rect.height / 2)) * 8;
+      const rotateY = (x / (rect.width / 2)) * 8;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+    function resetTilt(card) {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+    }
+
+    // --- TERMINAL SIMULATOR ---
+    const terminalScreen = document.getElementById('terminal-screen');
+    const autoLogs = [
+      "> Synchronizing TON Mini App gateway...",
+      "> Neural voice node online: Latency 21.4ms (Opus 48kHz)",
+      "> Llama-3-70B quant instance ready for tool dispatch",
+      "> WebSocket cluster: 1,480 concurrent active sessions"
+    ];
+    let logIdx = 0;
+    setInterval(() => {
+      if (logIdx < autoLogs.length) {
+        appendLog(autoLogs[logIdx], 'text-zinc-400');
+        logIdx++;
+      }
+    }, 2400);
+
+    function appendLog(text, colorClass = 'text-emerald-400') {
+      const line = document.createElement('div');
+      line.className = `flex items-center space-x-2 ${colorClass}`;
+      line.innerHTML = `<span class="text-indigo-400">⚡</span> <span>${text}</span>`;
+      terminalScreen.appendChild(line);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
+
+    function runCommand(cmd) {
+      if (cmd === 'deploy-agent') {
+        appendLog("EXEC: deploy-agent --env=production", "text-white");
+        setTimeout(() => appendLog("Building container image: operantix/swarm-agent:v2.4", "text-zinc-400"), 400);
+        setTimeout(() => appendLog("Deployment complete: 100% health checks passed [OK]", "text-emerald-400"), 1000);
+      } else if (cmd === 'test-telephony') {
+        appendLog("EXEC: ping-voice-node --region=us-east", "text-white");
+        setTimeout(() => appendLog("RTC Handshake complete: RTT 18ms | Jitter 0.4ms", "text-indigo-400"), 500);
+      } else if (cmd === 'view-stack') {
+        appendLog('{"studio": "Operantix", "status": "Ready for Deploy", "lead": "Principal Solo Engineer"}', "text-emerald-300");
+      }
+    }
+
+    // --- DYNAMIC AUDIO CANVAS WAVEFORM ---
+    let voiceActive = false;
+    const vCanvas = document.getElementById('voice-canvas');
+    const vCtx = vCanvas.getContext('2d');
+    const vStatus = document.getElementById('voice-status');
+    const vBtn = document.getElementById('voice-toggle-btn');
+    const pIcon = document.getElementById('phone-icon');
+    let phase = 0;
+
+    function toggleVoiceSim() {
+      voiceActive = !voiceActive;
+      if (voiceActive) {
+        vBtn.innerText = "DISCONNECT CALL";
+        vBtn.className = "px-4 py-1.5 rounded-full font-mono text-xs bg-rose-500/20 text-rose-400 border border-rose-500/40";
+        vStatus.innerText = "STATUS: CALL ACTIVE (24ms LATENCY)";
+        vStatus.className = "absolute bottom-2 right-3 font-mono text-[10px] text-emerald-400";
+        pIcon.classList.add('animate-bounce');
+        appendLog("VOICE AGENT CALL INITIALIZED VIA WEBRTC", "text-emerald-400");
+      } else {
+        vBtn.innerText = "INITIATE VOICE TEST";
+        vBtn.className = "px-4 py-1.5 rounded-full font-mono text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+        vStatus.innerText = "STATUS: STANDBY";
+        vStatus.className = "absolute bottom-2 right-3 font-mono text-[10px] text-zinc-500";
+        pIcon.classList.remove('animate-bounce');
+        appendLog("VOICE CALL TERMINATED", "text-rose-400");
+      }
+    }
+
+    function drawWave() {
+      requestAnimationFrame(drawWave);
+      vCtx.clearRect(0, 0, vCanvas.width, vCanvas.height);
+      const centerY = vCanvas.height / 2;
+
+      vCtx.lineWidth = 2.5;
+      vCtx.strokeStyle = voiceActive ? '#10B981' : '#6366F1';
+      vCtx.beginPath();
+
+      for (let x = 0; x < vCanvas.width; x++) {
+        const amp = voiceActive 
+          ? Math.sin(x * 0.04 + phase) * 32 + Math.cos(x * 0.02 + phase * 1.5) * 20 
+          : Math.sin(x * 0.015 + phase) * 7;
+        const y = centerY + amp;
+        if (x === 0) vCtx.moveTo(x, y);
+        else vCtx.lineTo(x, y);
+      }
+      vCtx.stroke();
+      phase += voiceActive ? 0.18 : 0.04;
+    }
+    drawWave();
+
+    // --- COPY EMAIL CLIPBOARD ---
+    function copyStudioEmail() {
+      navigator.clipboard.writeText('operantix@gmail.com');
+      playTechSuccessChime();
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 60,
+          spread: 70,
+          origin: { y: 0.85 },
+          colors: ['#10B981', '#6366F1', '#38BDF8', '#FFFFFF']
+        });
+      }
+      const text = document.getElementById('copy-text');
+      text.innerText = 'COPIED!';
+      text.classList.add('text-emerald-400');
+      setTimeout(() => {
+        text.innerText = 'COPY';
+        text.classList.remove('text-emerald-400');
+      }, 2500);
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      playTechSuccessChime();
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 140,
+          spread: 100,
+          origin: { y: 0.7 },
+          colors: ['#10B981', '#6366F1', '#38BDF8', '#F59E0B']
+        });
+      }
+      appendLog("TRANSMITTING ENCRYPTED CLIENT BRIEF TO DISPATCH...", "text-indigo-400");
+      setTimeout(() => {
+        appendLog("BRIEF ACKNOWLEDGED: Operantix will establish link within 24h.", "text-emerald-400");
+      }, 700);
+      alert("Operantix has received your brief. High-priority dispatch link established!");
+    }
+
+    // --- BROWSER WEB AUDIO SCI-FI SYNTHESIZER ---
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSciFiBeep(freq = 600, duration = 0.08, type = 'sine') {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.6, ctx.currentTime + duration);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function playTechSuccessChime() {
+      try {
+        const ctx = getAudioContext();
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.09);
+          gain.gain.setValueAtTime(0.05, ctx.currentTime + i * 0.09);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.09 + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + i * 0.09);
+          osc.stop(ctx.currentTime + i * 0.09 + 0.25);
+        });
+      } catch(e) {}
+    }
+
+    // Attach sci-fi sound effects on hoverable buttons & links
+    document.querySelectorAll('button, a').forEach(el => {
+      el.addEventListener('mouseenter', () => playSciFiBeep(880, 0.05, 'triangle'));
+    });
+
+    // --- CURSOR COMET PARTICLE TRAIL ---
+    const tCanvas = document.getElementById('trail-canvas');
+    const tCtx = tCanvas.getContext('2d');
+    let trailParticles = [];
+
+    function resizeTrailCanvas() {
+      tCanvas.width = window.innerWidth;
+      tCanvas.height = window.innerHeight;
+    }
+    resizeTrailCanvas();
+    window.addEventListener('resize', resizeTrailCanvas);
+
+    window.addEventListener('mousemove', (e) => {
+      // Spawn comet sparkles
+      for (let i = 0; i < 2; i++) {
+        trailParticles.push({
+          x: e.clientX + (Math.random() - 0.5) * 8,
+          y: e.clientY + (Math.random() - 0.5) * 8,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5 - 0.5,
+          life: 1,
+          decay: 0.035 + Math.random() * 0.02,
+          size: 2.5 + Math.random() * 2.5,
+          color: Math.random() > 0.5 ? '#10B981' : '#6366F1'
+        });
+      }
+    });
+
+    function animateTrail() {
+      tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
+      for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const p = trailParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) {
+          trailParticles.splice(i, 1);
+          continue;
+        }
+        tCtx.save();
+        tCtx.globalAlpha = p.life * 0.8;
+        tCtx.fillStyle = p.color;
+        tCtx.shadowColor = p.color;
+        tCtx.shadowBlur = 8;
+        tCtx.beginPath();
+        tCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        tCtx.fill();
+        tCtx.restore();
+      }
+      requestAnimationFrame(animateTrail);
+    }
+    animateTrail();
+
+  </script>
+</body>
+</html>
