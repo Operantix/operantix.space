@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dialer Vault - Secret Stealth Gallery & Photo Locker - Apps on Google Play</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Google Sans"', '"Roboto"', 'sans-serif'],
+            roboto: ['"Roboto"', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace'],
+          },
+          colors: {
+            gpBg: '#1f1f1f',
+            gpSurface: '#2b2b2b',
+            gpCard: '#181818',
+            gpGreen: '#01875f',
+            gpGreenHover: '#017250',
+            gpGreenLight: '#e6f4ea',
+            gpText: '#e8eaed',
+            gpTextMuted: '#9aa0a6',
+            gpBorder: '#3c4043',
+            brandGreen: '#10B981',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #1f1f1f;
+      color: #e8eaed;
+      font-family: 'Google Sans', 'Roboto', sans-serif;
+    }
+    /* Hide scrollbar for carousel */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .screenshot-frame {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-600 selection:text-white">
+
+  <!-- Google Play Top Header -->
+  <header class="sticky top-0 z-50 bg-[#1f1f1f]/95 backdrop-blur-md border-b border-gpBorder/60 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Left: Logo & Nav -->
+      <div class="flex items-center space-x-8">
+        <a href="index.html" class="flex items-center space-x-2.5 group">
+          <!-- Google Play Triangle Logo SVG -->
+          <svg class="w-8 h-8" viewBox="0 0 40 40">
+            <path d="M6.2 3.5C5.8 4 5.5 4.7 5.5 5.6V34.4C5.5 35.3 5.8 36 6.2 36.5L6.3 36.6L22.9 20.1V19.9L6.3 3.4L6.2 3.5Z" fill="#00E5FF"/>
+            <path d="M28.4 25.6L22.9 20V19.9L28.4 14.3L28.5 14.4L35 18.1C36.9 19.1 36.9 20.8 35 21.8L28.5 25.5L28.4 25.6Z" fill="#FFD600"/>
+            <path d="M28.5 25.6L22.9 20L6.2 36.6C6.8 37.3 7.8 37.4 9 36.7L28.5 25.6Z" fill="#FF3D00"/>
+            <path d="M28.5 14.4L9 3.3C7.8 2.6 6.8 2.7 6.2 3.4L22.9 20L28.5 14.4Z" fill="#00E676"/>
+          </svg>
+          <span class="text-xl font-medium tracking-tight text-white group-hover:text-gpGreen transition-colors">Google Play</span>
+        </a>
+
+        <nav class="hidden md:flex items-center space-x-6 text-sm text-gpTextMuted font-medium">
+          <a href="#" class="hover:text-white transition-colors">Games</a>
+          <a href="#" class="text-white border-b-2 border-gpGreen pb-1 font-semibold">Apps</a>
+          <a href="#" class="hover:text-white transition-colors">Movies & TV</a>
+          <a href="#" class="hover:text-white transition-colors">Books</a>
+          <a href="#" class="hover:text-white transition-colors">Kids</a>
+        </nav>
+      </div>
+
+      <!-- Right: Search, Help & Back to Operantix -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <a href="index.html" class="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-[11px] sm:text-xs font-mono text-emerald-400 border border-emerald-500/30 transition-all">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span class="inline">Studio</span>
+        </a>
+        <button class="p-1.5 sm:p-2 rounded-full hover:bg-zinc-800 text-gpTextMuted hover:text-white transition-colors">
+          <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+        </button>
+        <button class="hidden sm:block p-2 rounded-full hover:bg-zinc-800 text-gpTextMuted hover:text-white transition-colors">
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+        </button>
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs sm:text-sm ring-2 ring-emerald-400/40">
+          O
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 space-y-8 sm:space-y-12">
+    
+    <!-- Hero App Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      
+      <!-- App Icon & Title (Left 8 cols) -->
+      <div class="lg:col-span-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-center sm:items-start text-center sm:text-left">
+        <!-- App Icon -->
+        <div class="relative w-24 h-24 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-3xl overflow-hidden shadow-2xl bg-zinc-900 border border-white/10 flex-shrink-0 group">
+          <img src="assets/app_icon.svg" alt="Dialer Vault Icon" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" />
+        </div>
+
+        <!-- Info -->
+        <div class="space-y-2 flex-grow w-full">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+            Dialer Vault: Secret Photo & Video Locker
+          </h1>
+          <div class="flex items-center justify-center sm:justify-start space-x-2">
+            <span class="text-gpGreen font-medium text-sm hover:underline cursor-pointer">Operantix Mobile Lab</span>
+            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-500 text-white text-[10px]">✓</span>
+          </div>
+          <p class="text-xs text-gpTextMuted font-medium">
+            Contains ads • In-app purchases
+          </p>
+
+          <!-- Badges Bar (Google Play Style) -->
+          <div class="pt-3 sm:pt-4 flex items-center justify-center sm:justify-start space-x-3 sm:space-x-6 text-center divide-x divide-gpBorder overflow-x-auto no-scrollbar py-1">
+            <div class="pr-3 sm:pr-6 flex-shrink-0">
+              <div class="flex items-center justify-center space-x-1 font-bold text-white text-sm sm:text-base">
+                <span>4.9</span>
+                <i data-lucide="star" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white text-white"></i>
+              </div>
+              <div class="text-[10px] sm:text-[11px] text-gpTextMuted mt-0.5">18.6K reviews</div>
+            </div>
+
+            <div class="px-3 sm:px-6 flex-shrink-0">
+              <div class="font-bold text-white text-sm sm:text-base">50K+</div>
+              <div class="text-[10px] sm:text-[11px] text-gpTextMuted mt-0.5">Downloads</div>
+            </div>
+
+            <div class="px-3 sm:px-6 flex-shrink-0">
+              <div class="inline-block px-1.5 py-0.5 border border-gpTextMuted text-[9px] sm:text-[10px] font-bold rounded text-white">3+</div>
+              <div class="text-[10px] sm:text-[11px] text-gpTextMuted mt-0.5">Rated for 3+</div>
+            </div>
+
+            <div class="pl-3 sm:pl-6 flex-shrink-0">
+              <div class="flex items-center justify-center space-x-1 text-emerald-400 font-bold text-xs sm:text-sm">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
+                <span>Verified</span>
+              </div>
+              <div class="text-[10px] sm:text-[11px] text-gpTextMuted mt-0.5">Play Protect</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Column (Right 4 cols) -->
+      <div class="lg:col-span-4 flex flex-col space-y-3 pt-2 w-full">
+        <!-- Install / Download APK Button -->
+        <button id="install-btn" onclick="startDownloadFlow()" class="w-full py-3 sm:py-3.5 px-6 rounded-xl bg-gpGreen hover:bg-gpGreenHover active:scale-[0.98] text-white font-medium text-sm sm:text-base shadow-lg shadow-gpGreen/30 transition-all flex items-center justify-center space-x-2">
+          <i data-lucide="download" id="btn-icon" class="w-5 h-5"></i>
+          <span id="btn-text">Install APK (20 MB)</span>
+        </button>
+
+        <div class="flex items-center space-x-3">
+          <!-- Share Button -->
+          <button onclick="shareAppModal()" class="flex-1 py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-gpText font-medium text-xs flex items-center justify-center space-x-2 border border-white/5 transition-all">
+            <i data-lucide="share-2" class="w-4 h-4"></i>
+            <span>Share</span>
+          </button>
+
+          <!-- Wishlist / Save Button -->
+          <button onclick="toggleWishlist(this)" class="flex-1 py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-gpText font-medium text-xs flex items-center justify-center space-x-2 border border-white/5 transition-all">
+            <i data-lucide="bookmark" class="w-4 h-4"></i>
+            <span id="wishlist-text">Add to wishlist</span>
+          </button>
+        </div>
+
+        <div class="pt-1 flex items-center justify-center sm:justify-start space-x-2 text-xs text-gpTextMuted">
+          <i data-lucide="smartphone" class="w-4 h-4 text-gpGreen"></i>
+          <span>Compatible with all Android 8.0+ devices</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Download Progress Bar (Hidden by default) -->
+    <div id="download-progress-box" class="hidden p-4 rounded-2xl bg-zinc-900 border border-emerald-500/40 space-y-3">
+      <div class="flex items-center justify-between text-xs font-mono">
+        <span class="text-emerald-400 font-bold flex items-center space-x-1.5">
+          <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-400"></i>
+          <span id="progress-status">Downloading DialerVault.apk...</span>
+        </span>
+        <span id="progress-percent" class="text-zinc-400">0%</span>
+      </div>
+      <div class="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-gpGreen h-full w-0 transition-all duration-300"></div>
+      </div>
+      <div id="download-complete-msg" class="hidden text-xs text-zinc-300 font-sans flex items-center justify-between pt-1">
+        <span class="text-emerald-400 font-semibold">✓ Download Complete! Tap open in your notifications to install.</span>
+        <a href="downloads/DialerVault.apk" download="DialerVault.apk" class="underline text-gpGreen hover:text-emerald-300 text-xs">Direct Link</a>
+      </div>
+    </div>
+
+    <!-- Screenshots Carousel -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white">App Preview & Stealth Showcase</h2>
+        <div class="flex items-center space-x-2">
+          <button onclick="scrollScreenshots(-320)" class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition-colors">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <button onclick="scrollScreenshots(320)" class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition-colors">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal Scrollable Container -->
+      <div id="screenshot-carousel" class="flex space-x-4 sm:space-x-6 overflow-x-auto no-scrollbar py-4 scroll-smooth snap-x snap-mandatory">
+        
+        <!-- Shot 1: Camouflaged Phone Dialer -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_dialer.png" alt="Stealth Phone Dialer" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-emerald-400 bg-black/60 px-2 py-0.5 rounded border border-emerald-500/30">01 // CAMOUFLAGE</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">Real Working Phone Dialer & Call Logs</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shot 2: Secret PIN Keypad -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_secret_keypad.png" alt="Secret PIN Keypad" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-indigo-400 bg-black/60 px-2 py-0.5 rounded border border-indigo-500/30">02 // SECRET PIN</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">Enter #7865# To Silently Unlock Vault</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shot 3: Zero-Knowledge Vault Dashboard (Dark) -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_vault_dashboard.png" alt="Vault Dashboard" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-emerald-400 bg-black/60 px-2 py-0.5 rounded border border-emerald-500/30">03 // VAULT CORE</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">Military-Grade AES-256 GCM Storage</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shot 4: Central Cloud Sync & Backup -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_cloud_backup.png" alt="Cloud Backup & Sync" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-sky-400 bg-black/60 px-2 py-0.5 rounded border border-sky-500/30">04 // CLOUD BACKUP</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">Central Cloud Sync & File Queue (v1.2.2)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shot 5: 100 GB Lifetime VIP & Disaster Recovery -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_cloud_vip.png" alt="100 GB Lifetime VIP" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-amber-400 bg-black/60 px-2 py-0.5 rounded border border-amber-500/30">05 // VIP STORAGE</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">100 GB Cloud VIP & Disaster Recovery</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shot 6: Intruder Snoop Catcher -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_intruder_alerts.png" alt="Intruder Alerts" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-rose-400 bg-black/60 px-2 py-0.5 rounded border border-rose-500/30">06 // SNOOP CATCHER</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">Silent Front Camera Break-in Log</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shot 7: Light & Glassmorphism Theme -->
+        <div class="flex-none w-56 sm:w-64 md:w-72 space-y-3 snap-center">
+          <div class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-2 sm:border-4 border-zinc-700 bg-black aspect-[9/19.5] screenshot-frame">
+            <img src="assets/screenshots/shot_vault_light.png" alt="Frosted Vault Design" class="w-full h-full object-cover" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 sm:p-4">
+              <span class="text-[10px] sm:text-xs font-mono font-bold text-teal-300 bg-black/60 px-2 py-0.5 rounded border border-teal-500/30">07 // GLASS THEME</span>
+              <p class="text-[11px] sm:text-xs text-white mt-1 font-medium">Frosted Glass Theme & Category Explorer</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- About This App Section -->
+    <section class="border-t border-gpBorder pt-10 space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white">About this app</h2>
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gpTextMuted"></i>
+      </div>
+
+      <p class="text-sm text-gpText leading-relaxed max-w-4xl font-roboto">
+        <strong>Dialer Vault</strong> is the world's most sophisticated stealth privacy vault camouflaged inside an authentic, fully operational native Android phone dialer. Hide sensitive photos, private videos, secret audio recordings, and classified documents behind an innocent dial keypad.
+      </p>
+
+      <!-- Feature Badges Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+        
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-white/5 space-y-2">
+          <div class="flex items-center space-x-2 text-emerald-400 font-bold text-sm">
+            <i data-lucide="camera" class="w-4 h-4"></i>
+            <span>📸 Intruder Break-In Selfie</span>
+          </div>
+          <p class="text-xs text-gpTextMuted leading-normal">
+            If someone enters the wrong PIN 3 times, the app silently snaps their photo using the front camera with zero shutter sound or flash, logging date, time, and wrong PIN.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-white/5 space-y-2">
+          <div class="flex items-center space-x-2 text-indigo-400 font-bold text-sm">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span>🔄 Flip-to-Lock & Shake Panic</span>
+          </div>
+          <p class="text-xs text-gpTextMuted leading-normal">
+            Turn your phone face-down on a table or give it a quick shake—the vault instantly shuts down and reverts to the standard dialer screen with haptic feedback.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-white/5 space-y-2">
+          <div class="flex items-center space-x-2 text-rose-400 font-bold text-sm">
+            <i data-lucide="eye-off" class="w-4 h-4"></i>
+            <span>🕵️ Recent Apps Blur (FLAG_SECURE)</span>
+          </div>
+          <p class="text-xs text-gpTextMuted leading-normal">
+            Screenshots are blocked inside the vault, and opening Android's recent apps switcher obscures the vault thumbnail so bystanders can't see your private media.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-white/5 space-y-2">
+          <div class="flex items-center space-x-2 text-amber-400 font-bold text-sm">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+            <span>📴 Auto-Lock on App Switch</span>
+          </div>
+          <p class="text-xs text-gpTextMuted leading-normal">
+            Leaving the vault to home or multitasking automatically locks the session, returning back to the dialer screen so you never leave your secrets open.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-white/5 space-y-2">
+          <div class="flex items-center space-x-2 text-teal-400 font-bold text-sm">
+            <i data-lucide="shield" class="w-4 h-4"></i>
+            <span>🔒 AES-256 Military Encryption</span>
+          </div>
+          <p class="text-xs text-gpTextMuted leading-normal">
+            Files imported into Dialer Vault are encrypted at byte level. Original files are permanently deleted from Android gallery to prevent forensic recovery.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-white/5 space-y-2">
+          <div class="flex items-center space-x-2 text-cyan-400 font-bold text-sm">
+            <i data-lucide="phone" class="w-4 h-4"></i>
+            <span>📞 Genuine Phone Calling</span>
+          </div>
+          <p class="text-xs text-gpTextMuted leading-normal">
+            Make phone calls, search contacts, view missed/incoming calls, and refresh history. To anyone looking, it's just your standard default phone dialer app.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 pt-2">
+        <span class="px-3 py-1 rounded-full bg-zinc-800 text-xs text-gpText">#Tools</span>
+        <span class="px-3 py-1 rounded-full bg-zinc-800 text-xs text-gpText">#Privacy</span>
+        <span class="px-3 py-1 rounded-full bg-zinc-800 text-xs text-gpText">#Photo Locker</span>
+        <span class="px-3 py-1 rounded-full bg-zinc-800 text-xs text-gpText">#Stealth Security</span>
+        <span class="px-3 py-1 rounded-full bg-zinc-800 text-xs text-gpText">#Intruder Catcher</span>
+      </div>
+
+      <!-- App Info Metadata Table -->
+      <div class="pt-6 border-t border-gpBorder/60 grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs font-roboto">
+        <div>
+          <span class="text-gpTextMuted block">Version</span>
+          <span class="font-medium text-white text-sm">4.3.0 (Hardened)</span>
+        </div>
+        <div>
+          <span class="text-gpTextMuted block">Updated on</span>
+          <span class="font-medium text-white text-sm">Sep 10, 2026</span>
+        </div>
+        <div>
+          <span class="text-gpTextMuted block">Requires Android</span>
+          <span class="font-medium text-white text-sm">8.0 and up</span>
+        </div>
+        <div>
+          <span class="text-gpTextMuted block">Developer</span>
+          <span class="font-medium text-emerald-400 text-sm">Operantix Mobile Lab</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Safety Section (Google Play Style) -->
+    <section class="border-t border-gpBorder pt-10 space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white">Data safety</h2>
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gpTextMuted"></i>
+      </div>
+      <p class="text-xs text-gpTextMuted max-w-3xl">
+        Safety starts with understanding how developers collect and share your data. Data privacy and security practices may vary based on your use, region, and age.
+      </p>
+
+      <div class="p-6 rounded-2xl bg-zinc-900 border border-gpBorder/80 space-y-4 max-w-3xl">
+        <div class="flex items-start space-x-4">
+          <i data-lucide="share-2" class="w-5 h-5 text-gpTextMuted flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="text-sm font-medium text-white">No data shared with third parties</div>
+            <div class="text-xs text-gpTextMuted">The developer says this app doesn't share user data with other companies or organizations.</div>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <i data-lucide="lock" class="w-5 h-5 text-gpTextMuted flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="text-sm font-medium text-white">Data is encrypted in transit and on device</div>
+            <div class="text-xs text-gpTextMuted">Your data is secured via zero-knowledge hardware-backed AES-256 GCM encryption.</div>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-4">
+          <i data-lucide="trash-2" class="w-5 h-5 text-gpTextMuted flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="text-sm font-medium text-white">You can request that data be deleted</div>
+            <div class="text-xs text-gpTextMuted">Built-in secure shredder wipes deleted files irrevocably from storage.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ratings & Reviews Section -->
+    <section class="border-t border-gpBorder pt-10 space-y-8">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white">Ratings and reviews</h2>
+        <div class="flex items-center space-x-1 text-xs text-gpTextMuted">
+          <span>Ratings and reviews are verified</span>
+          <i data-lucide="info" class="w-3.5 h-3.5"></i>
+        </div>
+      </div>
+
+      <!-- Rating Score Overview -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-8">
+        <div class="text-center sm:text-left">
+          <div class="text-6xl font-bold text-white font-sans">4.9</div>
+          <div class="flex items-center justify-center sm:justify-start space-x-1 py-1 text-gpGreen">
+            <i data-lucide="star" class="w-4 h-4 fill-gpGreen"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-gpGreen"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-gpGreen"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-gpGreen"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-gpGreen"></i>
+          </div>
+          <div class="text-xs text-gpTextMuted">18,642 reviews</div>
+        </div>
+
+        <!-- Star Bars -->
+        <div class="flex-grow max-w-md space-y-1.5 text-xs font-mono text-gpTextMuted">
+          <div class="flex items-center space-x-3">
+            <span>5</span>
+            <div class="flex-grow bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-gpGreen h-full w-[92%] rounded-full"></div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span>4</span>
+            <div class="flex-grow bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-gpGreen h-full w-[6%] rounded-full"></div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span>3</span>
+            <div class="flex-grow bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-gpGreen h-full w-[1.5%] rounded-full"></div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span>2</span>
+            <div class="flex-grow bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-gpGreen h-full w-[0.3%] rounded-full"></div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span>1</span>
+            <div class="flex-grow bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-gpGreen h-full w-[0.2%] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Review Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        
+        <!-- Review 1 -->
+        <div class="p-6 rounded-2xl bg-zinc-900 border border-white/5 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs">
+                MR
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Marcus Reynolds</div>
+                <div class="text-[11px] text-gpTextMuted">September 4, 2026</div>
+              </div>
+            </div>
+            <div class="flex text-gpGreen">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+            </div>
+          </div>
+          <p class="text-xs text-gpText leading-relaxed">
+            Hands down the best vault app ever created. The fact that it acts like a literal phone dialer and actually lets you search contacts and make calls completely eliminates any suspicion. The flip-to-lock gesture saved me twice already!
+          </p>
+          <div class="text-[11px] text-gpTextMuted pt-2 border-t border-white/5 flex items-center justify-between">
+            <span>284 people found this review helpful</span>
+            <button class="hover:text-white transition-colors">Helpful</button>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="p-6 rounded-2xl bg-zinc-900 border border-white/5 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">
+                SK
+              </div>
+              <div>
+                <div class="text-sm font-medium text-white">Sarah K.</div>
+                <div class="text-[11px] text-gpTextMuted">August 28, 2026</div>
+              </div>
+            </div>
+            <div class="flex text-gpGreen">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-gpGreen"></i>
+            </div>
+          </div>
+          <p class="text-xs text-gpText leading-relaxed">
+            The snoop catcher selfie feature caught my nosy roommate red-handed trying random codes! Checked the Intruder Alerts log and there she was with the time stamp and wrong PIN. Absolutely genius design and super smooth dark UI.
+          </p>
+          <div class="text-[11px] text-gpTextMuted pt-2 border-t border-white/5 flex items-center justify-between">
+            <span>192 people found this review helpful</span>
+            <button class="hover:text-white transition-colors">Helpful</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Google Play Footer -->
+  <footer class="mt-20 border-t border-gpBorder/60 bg-[#171717] py-8 px-4 lg:px-8 text-xs text-gpTextMuted">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex flex-wrap items-center gap-6">
+        <a href="index.html" class="hover:text-white transition-colors">Operantix Studio</a>
+        <a href="#" class="hover:text-white transition-colors">Play Terms of Service</a>
+        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-white transition-colors">About Google Play</a>
+        <a href="#" class="hover:text-white transition-colors">Developers</a>
+      </div>
+      <div>© 2026 Operantix Studio • All rights reserved</div>
+    </div>
+  </footer>
+
+  <!-- Share Modal (Hidden by default) -->
+  <div id="share-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-white/10 rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white">Share Dialer Vault</h3>
+        <button onclick="closeShareModal()" class="p-1.5 rounded-full hover:bg-zinc-800 text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-gpTextMuted">
+        Share the Play Store download link directly with friends or scan the QR code.
+      </p>
+
+      <div class="p-3 bg-zinc-950 rounded-xl border border-white/10 flex items-center justify-between">
+        <span id="share-url-display" class="text-xs font-mono text-zinc-300 truncate mr-2">https://operantix.space/dialer-vault.html</span>
+        <button onclick="copyShareUrl()" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-black font-mono text-xs font-bold hover:bg-emerald-400 transition-all flex items-center space-x-1 flex-shrink-0">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span id="copy-btn-text">Copy</span>
+        </button>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="navigator.share ? navigator.share({title: 'Dialer Vault', url: window.location.href}) : copyShareUrl()" class="w-full py-3 rounded-xl bg-gpGreen text-white font-medium text-sm hover:bg-gpGreenHover transition-all flex items-center justify-center space-x-2">
+          <i data-lucide="share" class="w-4 h-4"></i>
+          <span>Send via WhatsApp / Telegram / Message</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Horizontal scroll helper
+    function scrollScreenshots(amount) {
+      const carousel = document.getElementById('screenshot-carousel');
+      carousel.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    // Download flow simulation & actual APK download trigger
+    function startDownloadFlow() {
+      const btn = document.getElementById('install-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnIcon = document.getElementById('btn-icon');
+      const progressBox = document.getElementById('download-progress-box');
+      const progressBar = document.getElementById('progress-bar');
+      const progressPercent = document.getElementById('progress-percent');
+      const progressStatus = document.getElementById('progress-status');
+      const completeMsg = document.getElementById('download-complete-msg');
+
+      // Update button state
+      btn.disabled = true;
+      btn.classList.add('opacity-80', 'cursor-wait');
+      btnText.innerText = 'Starting Download...';
+      progressBox.classList.remove('hidden');
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 18) + 12;
+        if (progress > 100) progress = 100;
+
+        progressBar.style.width = progress + '%';
+        progressPercent.innerText = progress + '%';
+        progressStatus.innerText = `Downloading DialerVault.apk (${(progress * 0.2).toFixed(1)} / 20.0 MB)...`;
+
+        if (progress === 100) {
+          clearInterval(interval);
+          progressStatus.innerText = 'APK Ready to Install';
+          btnText.innerText = 'Downloaded ✓';
+          btn.classList.remove('bg-gpGreen', 'hover:bg-gpGreenHover');
+          btn.classList.add('bg-zinc-800', 'text-emerald-400');
+          btnIcon.setAttribute('data-lucide', 'check-circle');
+          lucide.createIcons();
+          completeMsg.classList.remove('hidden');
+
+          // Trigger Confetti
+          confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+
+          // Trigger actual file download
+          const downloadAnchor = document.createElement('a');
+          downloadAnchor.href = 'downloads/DialerVault.apk';
+          downloadAnchor.download = 'DialerVault.apk';
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          document.body.removeChild(downloadAnchor);
+        }
+      }, 250);
+    }
+
+    // Share Modal
+    function shareAppModal() {
+      document.getElementById('share-modal').classList.remove('hidden');
+      document.getElementById('share-modal').classList.add('flex');
+    }
+
+    function closeShareModal() {
+      document.getElementById('share-modal').classList.add('hidden');
+      document.getElementById('share-modal').classList.remove('flex');
+    }
+
+    function copyShareUrl() {
+      navigator.clipboard.writeText(window.location.href);
+      const copyBtn = document.getElementById('copy-btn-text');
+      copyBtn.innerText = 'Copied!';
+      setTimeout(() => { copyBtn.innerText = 'Copy'; }, 2000);
+    }
+
+    // Wishlist Toggle
+    let isWishlisted = false;
+    function toggleWishlist(button) {
+      isWishlisted = !isWishlisted;
+      const text = document.getElementById('wishlist-text');
+      const icon = button.querySelector('i');
+      if (isWishlisted) {
+        text.innerText = 'Wishlisted ✓';
+        button.classList.add('text-emerald-400', 'border-emerald-500/40');
+      } else {
+        text.innerText = 'Add to wishlist';
+        button.classList.remove('text-emerald-400', 'border-emerald-500/40');
+      }
+    }
+  </script>
+</body>
+</html>
