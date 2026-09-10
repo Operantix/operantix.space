@@ -608,7 +608,7 @@
       </p>
 
       <div class="p-3 bg-zinc-950 rounded-xl border border-white/10 flex items-center justify-between">
-        <span id="share-url-display" class="text-xs font-mono text-zinc-300 truncate mr-2">https://operantix.space/dialer-vault.html</span>
+        <span id="share-url-display" class="text-xs font-mono text-zinc-300 truncate mr-2">https://www.operantix.space/dialer-vault</span>
         <button onclick="copyShareUrl()" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-black font-mono text-xs font-bold hover:bg-emerald-400 transition-all flex items-center space-x-1 flex-shrink-0">
           <i data-lucide="copy" class="w-3.5 h-3.5"></i>
           <span id="copy-btn-text">Copy</span>
@@ -700,7 +700,7 @@
     }
 
     function copyShareUrl() {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText('https://www.operantix.space/dialer-vault');
       const copyBtn = document.getElementById('copy-btn-text');
       copyBtn.innerText = 'Copied!';
       setTimeout(() => { copyBtn.innerText = 'Copy'; }, 2000);
@@ -720,6 +720,19 @@
         button.classList.remove('text-emerald-400', 'border-emerald-500/40');
       }
     }
+
+    // --- CLIENT-SIDE SOURCE PROTECTION & ANTI-INSPECT ---
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c'))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
   </script>
 </body>
 </html>
